@@ -23,7 +23,7 @@ public class DocToCSVDataConv {
 					DateTime dt = new DateTime(doc.getPublished_at());
 					String dat=dt.getDayOfMonth()<10?"0"+dt.getDayOfMonth():dt.getDayOfMonth()+"";
 					String mon=dt.getMonthOfYear()<10?"0"+dt.getMonthOfYear():dt.getMonthOfYear()+"";
-					String day=dat+mon+dt.getYear();
+					String day=dt.getYear()+"-"+mon+"-"+dat;
 					int val=1;
 					if(counter.containsKey(day)) {
 						val+=counter.get(day);

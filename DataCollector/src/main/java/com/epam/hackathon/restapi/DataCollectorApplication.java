@@ -3,6 +3,7 @@ package com.epam.hackathon.restapi;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -35,14 +36,17 @@ public class DataCollectorApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		// TODO Auto-generated method stub
+		
+		Random random=new Random();
+		
+		
 		Map<String, String> values = new HashMap<>();
 		values.put("apple",
-				"http://igen-api.qa.infongen.cc/v2/searches/e66e1565-24ca-485e-94d1-21be6701c59d/results?limit=10&show_options=documents");
-
-		 values.put("samsung",
-		 "http://igen-api.qa.infongen.cc/v2/searches/4915165f-edab-4fb9-8fef-282c663be1da/results?limit=10&show_options=documents");
-		 values.put("nokia",
-				 "http://igen-api.qa.infongen.cc/v2/searches/c113c296-447f-4db0-acf7-fc5ebf48a575/results?limit=10&show_options=documents");
+				"http://igen-api.qa.infongen.cc/v2/searches/135149c8-21bb-4b8a-96e2-6443288e4029/results?limit=250&show_options=documents&rnd="+random.nextInt());
+	values.put("samsung",
+		"http://igen-api.qa.infongen.cc/v2/searches/d632ade4-b0ce-4e39-8fd3-232192fd6d74/results?limit=250&show_options=documents&rnd="+random.nextInt());
+		 values.put("sony",
+				 "http://igen-api.qa.infongen.cc/v2/searches/cdc77938-8f84-4ac6-ab3a-22283103fea9/results?limit=250&show_options=documents&rnd="+random.nextInt());
 		Map<String, Float> allCal = new HashMap<>();
 		
 		values.forEach((product, uri) -> {
@@ -74,10 +78,11 @@ public class DataCollectorApplication implements CommandLineRunner {
 
 			});
 
-			float sum = (float) calCulated.values().stream().mapToDouble(i -> i).sum();
-			System.out.println("Sum - " + sum);
-			sum = sum / calCulated.size();
-			allCal.put(product, sum);
+			float totPos = (float) counterPos.values().stream().mapToDouble(i -> i).sum();
+			float totlNeg =(float) counterNeg.values().stream().mapToDouble(i -> i).sum();
+			
+			float tot =(totPos/( totPos + totlNeg))*100;
+			allCal.put(product, tot);
 
 			System.out.println("calCulated" + calCulated);
 
@@ -85,11 +90,11 @@ public class DataCollectorApplication implements CommandLineRunner {
 
 			CsvFileWriter.writeFileFromMapInt(product + "_pos", counterPos);
 
-			CsvFileWriter.writeFileFromMapFloat(product + "_all", calCulated);
+			CsvFileWriter.writeFileFromMapFloat(product + "_consolidated", calCulated);
 
 		});
 
-		CsvFileWriter.writeFileFromMapFloat("_all", allCal);
+		CsvFileWriter.writeFileFromMapFloat("_speedo", allCal);
 
 	}
 
