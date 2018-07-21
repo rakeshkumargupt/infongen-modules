@@ -37,28 +37,37 @@ public class DataCollectorApplication implements CommandLineRunner {
 		// TODO Auto-generated method stub
 		Map<String, String> values = new HashMap<>();
 		values.put("apple",
-				"http://igen-api.qa.infongen.cc/v2/searches/135149c8-21bb-4b8a-96e2-6443288e4029/results?limit=25&show_options=documents");
+				"http://igen-api.qa.infongen.cc/v2/searches/e66e1565-24ca-485e-94d1-21be6701c59d/results?limit=10&show_options=documents");
 
-		// values.put("samsung",
-		// "http://igen-api.qa.infongen.cc/v2/searches/135149c8-21bb-4b8a-96e2-6443288e4029/results?limit=5&show_options=documents");
+		 values.put("samsung",
+		 "http://igen-api.qa.infongen.cc/v2/searches/4915165f-edab-4fb9-8fef-282c663be1da/results?limit=10&show_options=documents");
+		 values.put("nokia",
+				 "http://igen-api.qa.infongen.cc/v2/searches/c113c296-447f-4db0-acf7-fc5ebf48a575/results?limit=10&show_options=documents");
 		Map<String, Float> allCal = new HashMap<>();
+		
 		values.forEach((product, uri) -> {
 			ResponseDocuments data = restCallUtil.callGetMethod(uri);
-			// System.out.println(DocToCSVDataConv.getCSVDto(data));
 
 			Map<String, Integer> counter = new HashMap<>();
 			Map<String, Integer> counterNeg = new HashMap<>();
 			Map<String, Integer> counterPos = new HashMap<>();
 			Map<String, Float> calCulated = new HashMap<>();
-
+			
 			CsvFileWriter.writeToCSV(product, DocToCSVDataConv.getCSVDto(data, counter, counterNeg, counterPos));
 
+			System.out.println(product+"---"+counter+ ""+counterNeg+ counterPos);
+			
+			
 			counterPos.forEach((day, val) -> {
 				int tot = 0;
 				if (counterNeg.containsKey(day)) {
 					tot = counterNeg.get(day) + counterPos.get(day);
+					
+					System.out.println("Negative - "+counterNeg.get(day) + " Positive - "+ counterPos.get(day)); 
+					
 					if (tot > 0 && counterPos.get(day) > 0) {
-						float cal = (float) counterPos.get(day) % tot;
+						float cal = (float)( (float) counterPos.get(day) / (float) tot)*100;
+						System.out.println("Cal - " + cal);
 						calCulated.put(day, cal);
 					}
 				}
@@ -66,10 +75,9 @@ public class DataCollectorApplication implements CommandLineRunner {
 			});
 
 			float sum = (float) calCulated.values().stream().mapToDouble(i -> i).sum();
+			System.out.println("Sum - " + sum);
 			sum = sum / calCulated.size();
 			allCal.put(product, sum);
-
-			System.out.println("calCulated" + calCulated);
 
 			System.out.println("calCulated" + calCulated);
 

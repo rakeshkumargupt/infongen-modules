@@ -105,4 +105,11 @@ public class Document {
 		this.headline = headline;
 	}
 
+	@Override
+	public String toString() {
+		return "Document [category=" + category + ", contributor=" + contributor + ", id=" + id + ", uri=" + uri
+				+ ", image_uri=" + image_uri + ", published_at=" + published_at + ", sentiments=" + sentiments
+				+ ", source=" + source + ", summary=" + summary + ", tags=" + tags + ", headline=" + headline + "]";
+	}
+
 }

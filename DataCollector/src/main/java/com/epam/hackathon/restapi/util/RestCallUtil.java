@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,9 +22,8 @@ import com.epam.hackathon.restapi.model.ResponseDocuments;
 @Service
 public class RestCallUtil {
 
-	static String auth = "Bearer eyJraWQiOiJWbUZEN0pIU2ZEeE14K05wakZiS1hoVXEwOGVOenBWbUcrNHluMWdseUkwPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI1YmE0YThjMi1kNWYwLTRiOTQtOGMxMi0yYmNkYTVjYzU2YTAiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6InNlYXJjaFwvcmVhZCBzZWFyY2hcL2FsbCIsImF1dGhfdGltZSI6MTUzMjE5MTk5OSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfZjNBNW44Y2xJIiwiZXhwIjoxNTMyMTk1NTk5LCJpYXQiOjE1MzIxOTE5OTksInZlcnNpb24iOjIsImp0aSI6IjllZDM1Y2JmLTc4ODktNDczMS04Y2U2LWU3MTg2MDM0YmVkYyIsImNsaWVudF9pZCI6IjI4NnJpaHZsdGF2ajVrOWhibHFjamlqa3BsIiwidXNlcm5hbWUiOiJFUEFNX3N3eHdlcW1nMDBhQmpMNzd0VjRMc2c9PSJ9.JcbKLzwHaUxqgYf_AeKbpF7quLPvVEe2CKv9ZSrOZcCoSb2GlIu0YCywuzT0YkbWsk2CnC831ctHJ9m95zSPcbihGaeSPZLUoT29ey4t_YOUjQ8vLx6BoCxKwIAOFkSlAD2VnWf7qC4nC_mGABc0M77FOfToXnazBneD_bLlkrrwVky3kmU4jKtlOFcMNV6V3U_rpJ_tMxQ1J5YPYyufP6OfExrGQdpGSFHZ-sTyrtDgJ4QTvNV8OxS8Dw0SfJyon37Tg_Flh2YQa7GEq6AJXjexI0bAJR0djXN8PGMg3cb22XEUg0ARmNA7y8QhkC3zvKSWU4zr0HFM5eHjJwGKfQ";
+	static String auth = "Bearer eyJraWQiOiJWbUZEN0pIU2ZEeE14K05wakZiS1hoVXEwOGVOenBWbUcrNHluMWdseUkwPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI1YmE0YThjMi1kNWYwLTRiOTQtOGMxMi0yYmNkYTVjYzU2YTAiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6InNlYXJjaFwvcmVhZCBzZWFyY2hcL2FsbCIsImF1dGhfdGltZSI6MTUzMjE5NTc0NSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfZjNBNW44Y2xJIiwiZXhwIjoxNTMyMTk5MzQ1LCJpYXQiOjE1MzIxOTU3NDUsInZlcnNpb24iOjIsImp0aSI6IjRmMDlhYWQ3LTM2NDMtNDgyNi05Y2E5LTc0Mjk2YzRjZTczNSIsImNsaWVudF9pZCI6IjI4NnJpaHZsdGF2ajVrOWhibHFjamlqa3BsIiwidXNlcm5hbWUiOiJFUEFNX3N3eHdlcW1nMDBhQmpMNzd0VjRMc2c9PSJ9.KSd1Jk1rmMS-zMvhBL6hELxuul1ok-v5PF32M-l7x7ORb9G2pionq-X4DwEb_F7uk87m97t-u3cpPDepnKrCgZSC55mqgrSADIAnFsu6t6vg2AbX_tKCEuArDy_UUDi6E-X1wJlAGEHkNdtsaLkYxtlC4iCSsB1QLn4Z28SrehpEcqGmaGWBpxms_jl7q2kNNbhMNkdbyT7b0RyzHgOlxfH8bEK5Mgv7SxPcaeR_5yoM3fKljl1awOjQ71S7NeaWcu-hrmSvXg7hfIj2mApnvMe3KgQF9v8vntfUzSIj-UsdNNkt2ZKvMVUDIkPF3BxLIV-WlJz6m_J-T1X2PaSyHw";
 	String xAPI = "sEEi7skqmF7oWIjmkz9jL8z7Dz2Yt3GAaXcErfpi";
-	String uri = "http://igen-api.qa.infongen.cc/v2/searches/135149c8-21bb-4b8a-96e2-6443288e4029/results?limit=5&show_options=documents";
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -42,9 +42,12 @@ public class RestCallUtil {
 	}
 
 	public ResponseDocuments callGetMethod(String uri) {
-
+		System.out.println("uri => "+uri);	
 		HttpEntity<String> entity = new HttpEntity<>(createHeaders());
-		return restTemplate.exchange(uri, HttpMethod.GET, entity, ResponseDocuments.class).getBody();
+		ResponseEntity<ResponseDocuments> out = restTemplate.exchange(uri, HttpMethod.GET, entity, ResponseDocuments.class);
+		ResponseDocuments body = out.getBody();
+		System.out.println("Status code - " + out.getStatusCode() + " Body - " + body);
+		return body;
 
 	}
 	
