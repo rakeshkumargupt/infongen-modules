@@ -5,12 +5,128 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class CsvFileWriter {
 	private static final String COMMA_DELIMITER = ",";
 	private static final String NEW_LINE_SEPARATOR = "\n";
 
 	private static final String FILE_HEADER = "id,date,content,link,tag,type,posSent,negSen";
+
+	public static void writeFileFromMap(String fileName, Map<String, String> values) {
+
+		Timestamp time = new Timestamp(new Date().getTime());
+		fileName = fileName + "__" + time.getTime() + ".csv";
+
+		try {
+			final FileWriter fileWriter = new FileWriter(fileName);
+
+			fileWriter.append(FILE_HEADER.toString());
+			values.forEach((key, val) -> {
+
+				try {
+					fileWriter.append(NEW_LINE_SEPARATOR);
+
+					fileWriter.append(followCVSformat(val));
+
+					fileWriter.append(NEW_LINE_SEPARATOR);
+
+
+				} catch (IOException e) {
+
+					System.out.println("Error while flushing/closing fileWriter !!!");
+
+					e.printStackTrace();
+				}
+
+				
+
+			});
+			fileWriter.flush();
+			fileWriter.close();
+		} catch (Exception io) {
+			System.err.println("io " + io);
+		}
+
+	}
+	
+	public static void writeFileFromMapInt(String fileName, Map<String, Integer> values) {
+
+		Timestamp time = new Timestamp(new Date().getTime());
+		fileName = fileName + "__" + time.getTime() + ".csv";
+
+		try {
+			final FileWriter fileWriter = new FileWriter(fileName);
+
+			fileWriter.append(FILE_HEADER.toString());
+			values.forEach((key, val) -> {
+
+				try {
+					fileWriter.append(NEW_LINE_SEPARATOR);
+
+					fileWriter.append(followCVSformat(val+""));
+
+					fileWriter.append(NEW_LINE_SEPARATOR);
+
+					
+				} catch (IOException e) {
+
+					System.out.println("Error while flushing/closing fileWriter !!!");
+
+					e.printStackTrace();
+				}
+
+			});
+			fileWriter.flush();
+			fileWriter.close();
+
+		} catch (Exception io) {
+			System.err.println("io " + io);
+		}
+
+	}
+	
+	
+	public static void writeFileFromMapFloat(String fileName, Map<String, Float> values) {
+
+		Timestamp time = new Timestamp(new Date().getTime());
+		fileName = fileName + "__" + time.getTime() + ".csv";
+
+		try {
+			final FileWriter fileWriter = new FileWriter(fileName);
+
+			fileWriter.append(FILE_HEADER.toString());
+			values.forEach((key, val) -> {
+
+				try {
+					fileWriter.append(NEW_LINE_SEPARATOR);
+
+					fileWriter.append(followCVSformat(val+""));
+
+					fileWriter.append(NEW_LINE_SEPARATOR);
+
+					
+
+				} catch (IOException e) {
+
+					System.out.println("Error while flushing/closing fileWriter !!!");
+
+					e.printStackTrace();
+				}
+
+			});
+			fileWriter.flush();
+			fileWriter.close();
+
+		} catch (Exception io) {
+			System.err.println("io " + io);
+		}
+
+	}
+	
+	
+	
+	
 
 	public static void writeFile(String fileName, BaseDto baseDto) {
 		{
@@ -43,7 +159,7 @@ public class CsvFileWriter {
 				fileWriter.append(COMMA_DELIMITER);
 
 				fileWriter.append(baseDto.getTag());
-					
+
 				fileWriter.append(COMMA_DELIMITER);
 
 				fileWriter.append(baseDto.getType());
@@ -83,7 +199,6 @@ public class CsvFileWriter {
 		try {
 			fileWriter = new FileWriter(fileName);
 
-
 			fileWriter.append(FILE_HEADER.toString());
 
 			fileWriter.append(NEW_LINE_SEPARATOR);
@@ -99,16 +214,17 @@ public class CsvFileWriter {
 
 				fileWriter.append(COMMA_DELIMITER);
 
-				fileWriter.append(baseDto.getContent());
+				fileWriter.append(followCVSformat(baseDto.getContent()));
 
 				fileWriter.append(COMMA_DELIMITER);
 
 				fileWriter.append(baseDto.getLink());
 
 				fileWriter.append(COMMA_DELIMITER);
-				String tmp=baseDto.getTag().substring(1, baseDto.getTag().length()-1);
-				tmp=tmp.substring( tmp.length()-1);
-				System.out.println(tmp);
+				String tmp = baseDto.getTag().substring(1, baseDto.getTag().length() - 1);
+				tmp = tmp.substring(0, tmp.length() - 1);
+
+				tmp = tmp.replaceAll(", ", "#");
 				fileWriter.append(tmp);
 				fileWriter.append(COMMA_DELIMITER);
 
@@ -139,6 +255,16 @@ public class CsvFileWriter {
 			}
 
 		}
+		System.out.println("file");
+	}
+
+	private static String followCVSformat(String value) {
+
+		String result = value;
+		if (result.contains("\"")) {
+			result = result.replace("\"", "\"\"");
+		}
+		return result;
 
 	}
 

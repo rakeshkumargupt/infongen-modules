@@ -1,5 +1,9 @@
 package com.epam.hackathon.restapi;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -31,10 +35,45 @@ public class DataCollectorApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		// TODO Auto-generated method stub
-
-		ResponseDocuments data = restCallUtil.callGetMethod();
-		//System.out.println(DocToCSVDataConv.getCSVDto(data));
-		CsvFileWriter.appendFile("apple_1", DocToCSVDataConv.getCSVDto(data));
+		Map<String, String> values=new HashMap<>();
+		values.put("apple", "http://igen-api.qa.infongen.cc/v2/searches/135149c8-21bb-4b8a-96e2-6443288e4029/results?limit=250&show_options=documents");
+		
+	//	values.put("samsung", "http://igen-api.qa.infongen.cc/v2/searches/135149c8-21bb-4b8a-96e2-6443288e4029/results?limit=5&show_options=documents");
+		
+		
+		
+		
+		values.forEach((product, uri)->{
+			ResponseDocuments data = restCallUtil.callGetMethod(uri);
+			//System.out.println(DocToCSVDataConv.getCSVDto(data));
+			
+			Map<String, Integer> counter=new HashMap<>();
+			Map<String, Integer> counterNeg=new HashMap<>();
+			Map<String, Integer> counterPos=new HashMap<>();
+			Map<String, Float> calCulated=new HashMap<>();
+			
+			
+			counterPos.forEach((day, val)->{
+				int tot=0;
+				if(counterNeg.containsKey(day)) {
+					tot=counterNeg.get(day)+counterPos.get(day);
+					float cal=(float)counterPos.get(day)%tot;
+					calCulated.put(day, cal);
+				}
+				
+			});
+			
+			CsvFileWriter.writeFileFromMapInt(product+"_neg", counterNeg);
+			
+			CsvFileWriter.writeFileFromMapInt(product+"_pos", counterPos);
+			
+			CsvFileWriter.writeFileFromMapFloat(product+"_all", calCulated);
+			
+			CsvFileWriter.appendFile(product, DocToCSVDataConv.getCSVDto(data, counter,counterNeg, counterPos));
+			
+			
+		});
+	
 		
 		
 //		ObjectMapper objectMapper = new ObjectMapper();
