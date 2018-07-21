@@ -21,8 +21,9 @@ public class DocToCSVDataConv {
 					BaseDto dto=new BaseDto();
 					dto.setContent(doc.getHeadline());
 					DateTime dt = new DateTime(doc.getPublished_at());
-					System.err.println(dt);
-					String day=dt.getDayOfMonth()+""+dt.getMonthOfYear()+""+dt.getYear();
+					String dat=dt.getDayOfMonth()<10?"0"+dt.getDayOfMonth():dt.getDayOfMonth()+"";
+					String mon=dt.getMonthOfYear()<10?"0"+dt.getMonthOfYear():dt.getMonthOfYear()+"";
+					String day=dat+mon+dt.getYear();
 					int val=1;
 					if(counter.containsKey(day)) {
 						val+=counter.get(day);
@@ -35,7 +36,6 @@ public class DocToCSVDataConv {
 					dto.setLink(doc.getUri());
 					dto.setTag(doc.getTags().toString());
 					dto.setTime(doc.getPublished_at());
-					System.out.println("Polarity ---"+doc.getSentiments().get(0).getPolarities().get(0).getPolarity());
 					try {
 						if(doc.getSentiments().get(0).getPolarities().get(0).getPolarity()!=null)
 						if(doc.getSentiments().get(0).getPolarities().get(0).getPolarity().equals("negative"))
@@ -72,7 +72,6 @@ public class DocToCSVDataConv {
 				}
 				
 				);
-		System.out.println(counter);
 		
 		
 		

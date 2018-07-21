@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.opencsv.CSVWriter;
+
 public class CsvFileWriter {
 	private static final String COMMA_DELIMITER = ",";
 	private static final String NEW_LINE_SEPARATOR = "\n";
@@ -56,20 +58,16 @@ public class CsvFileWriter {
 		fileName = fileName + "__" + time.getTime() + ".csv";
 
 		try {
-			final FileWriter fileWriter = new FileWriter(fileName);
+			CSVWriter csvWriter;
 
-			fileWriter.append(FILE_HEADER.toString());
+			csvWriter = new CSVWriter(new FileWriter(fileName));
 			values.forEach((key, val) -> {
 
 				try {
-					fileWriter.append(NEW_LINE_SEPARATOR);
 
-					fileWriter.append(followCVSformat(val+""));
+					csvWriter.writeNext(new String[] { key, val + "" });
 
-					fileWriter.append(NEW_LINE_SEPARATOR);
-
-					
-				} catch (IOException e) {
+				} catch (Exception e) {
 
 					System.out.println("Error while flushing/closing fileWriter !!!");
 
@@ -77,52 +75,38 @@ public class CsvFileWriter {
 				}
 
 			});
-			fileWriter.flush();
-			fileWriter.close();
-
+			csvWriter.close();
 		} catch (Exception io) {
 			System.err.println("io " + io);
 		}
 
 	}
 	
-	
-	public static void writeFileFromMapFloat(String fileName, Map<String, Float> values) {
+	public static void writeFileFromMapFloat(String fileName, Map<String, Float> values) {	Timestamp time = new Timestamp(new Date().getTime());
+	fileName = fileName + "__" + time.getTime() + ".csv";
 
-		Timestamp time = new Timestamp(new Date().getTime());
-		fileName = fileName + "__" + time.getTime() + ".csv";
+	try {
+		CSVWriter csvWriter;
 
-		try {
-			final FileWriter fileWriter = new FileWriter(fileName);
+		csvWriter = new CSVWriter(new FileWriter(fileName));
+		values.forEach((key, val) -> {
 
-			fileWriter.append(FILE_HEADER.toString());
-			values.forEach((key, val) -> {
+			try {
 
-				try {
-					fileWriter.append(NEW_LINE_SEPARATOR);
+				csvWriter.writeNext(new String[] { key, val + "" });
 
-					fileWriter.append(followCVSformat(val+""));
+			} catch (Exception e) {
 
-					fileWriter.append(NEW_LINE_SEPARATOR);
+				System.out.println("Error while flushing/closing fileWriter !!!");
 
-					
+				e.printStackTrace();
+			}
 
-				} catch (IOException e) {
-
-					System.out.println("Error while flushing/closing fileWriter !!!");
-
-					e.printStackTrace();
-				}
-
-			});
-			fileWriter.flush();
-			fileWriter.close();
-
-		} catch (Exception io) {
-			System.err.println("io " + io);
-		}
-
-	}
+		});
+		csvWriter.close();
+	} catch (Exception io) {
+		System.err.println("io " + io);
+	}}
 	
 	
 	
@@ -267,5 +251,36 @@ public class CsvFileWriter {
 		return result;
 
 	}
+	
+	public static void writeToCSV(String fileName, List<BaseDto> allDtos) {
+		Timestamp time = new Timestamp(new Date().getTime());
+		fileName = fileName + "__" + time.getTime() + ".csv";
+		try {
+			CSVWriter csvWriter;
+
+			csvWriter = new CSVWriter(new FileWriter(fileName));
+			for (BaseDto baseDto : allDtos) {
+
+				String tmp = baseDto.getTag().substring(1, baseDto.getTag().length() - 1);
+				tmp = tmp.substring(0, tmp.length() - 1);
+
+				tmp = tmp.replaceAll(", ", "#");
+
+				String sen = baseDto.getSenPositiveCount() != null ? baseDto.getSenPositiveCount()
+						: baseDto.getSenNegetiveCount();
+				csvWriter.writeNext(new String[] { baseDto.getId(), baseDto.getTime(),
+						followCVSformat(baseDto.getContent()), baseDto.getLink(), tmp, baseDto.getType(), sen });
+
+			}
+			csvWriter.close();
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	
 
 }
