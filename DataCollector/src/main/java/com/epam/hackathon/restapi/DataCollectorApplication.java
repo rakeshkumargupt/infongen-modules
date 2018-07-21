@@ -9,8 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 import com.epam.hackathon.restapi.model.ResponseDocuments;
+import com.epam.hackathon.restapi.serialize.CsvFileWriter;
+import com.epam.hackathon.restapi.util.DocToCSVDataConv;
 import com.epam.hackathon.restapi.util.RestCallUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
 public class DataCollectorApplication implements CommandLineRunner {
@@ -31,11 +32,14 @@ public class DataCollectorApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		// TODO Auto-generated method stub
 
-		String data = restCallUtil.callGetMethodMock();
-		System.out.println(data);
-		ObjectMapper objectMapper = new ObjectMapper();
-		ResponseDocuments dco = objectMapper.readValue(data, ResponseDocuments.class);
-		System.out.println(dco);
+		ResponseDocuments data = restCallUtil.callGetMethod();
+		//System.out.println(DocToCSVDataConv.getCSVDto(data));
+		CsvFileWriter.appendFile("apple_1", DocToCSVDataConv.getCSVDto(data));
+		
+		
+//		ObjectMapper objectMapper = new ObjectMapper();
+//		ResponseDocuments dco = objectMapper.readValue(data, ResponseDocuments.class);
+//		System.out.println(dco);
 
 	}
 

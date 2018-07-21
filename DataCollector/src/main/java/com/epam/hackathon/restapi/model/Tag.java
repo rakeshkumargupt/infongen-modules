@@ -27,6 +27,10 @@ public class Tag {
 	public void setValues(List<Value> values) {
 		this.values = values;
 	}
+	@Override
+	public String toString() {
+		return display_name;
+	}
 
 	 
 }

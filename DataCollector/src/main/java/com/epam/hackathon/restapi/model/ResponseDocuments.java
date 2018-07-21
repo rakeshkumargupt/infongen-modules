@@ -20,6 +20,14 @@ public class ResponseDocuments {
 		return documents_total;
 	}
 
+	@Override
+	public String toString() {
+		return "ResponseDocuments [documents=" + documents + ", documents_total=" + documents_total
+				+ ", getDocuments()=" + getDocuments() + ", getDocuments_total()=" + getDocuments_total()
+				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
+				+ "]";
+	}
+
 	public void setDocuments_total(float documents_total) {
 		this.documents_total = documents_total;
 	}
