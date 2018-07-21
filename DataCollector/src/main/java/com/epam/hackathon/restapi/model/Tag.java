@@ -3,11 +3,11 @@ package com.epam.hackathon.restapi.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Subject {
+public class Tag {
 
 	private String display_name;
 	private String name;
-	List<SubjectValue> values = new ArrayList<SubjectValue>();
+	List<Value> values = new ArrayList<Value>();
 	
 	public String getDisplay_name() {
 		return display_name;
@@ -21,12 +21,12 @@ public class Subject {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public List<SubjectValue> getValues() {
+	public List<Value> getValues() {
 		return values;
 	}
-	public void setValues(List<SubjectValue> values) {
+	public void setValues(List<Value> values) {
 		this.values = values;
 	}
 
-	
+	 
 }

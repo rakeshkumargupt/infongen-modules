@@ -8,7 +8,9 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.epam.hackathon.restapi.model.ResponseDocuments;
 import com.epam.hackathon.restapi.util.RestCallUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author Rakesh_Gupta
@@ -17,12 +19,5 @@ import com.epam.hackathon.restapi.util.RestCallUtil;
 @Component
 public class RestApiTest {
 
-	@Autowired
-	private RestCallUtil restCallUtil;
 
-	@PostConstruct
-	public void testRest() {
-		String data = restCallUtil.callGetMethodTest();
-		System.out.println(data);
-	}
 }

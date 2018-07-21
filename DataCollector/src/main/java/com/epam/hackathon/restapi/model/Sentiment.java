@@ -3,44 +3,23 @@ package com.epam.hackathon.restapi.model;
 import java.util.ArrayList;
 
 public class Sentiment {
-	Subject SubjectObject;
+
+	Subject subject;
 	ArrayList<Polarity> polarities = new ArrayList<Polarity>();
 
-	// Getter Methods
-
 	public Subject getSubject() {
-		return SubjectObject;
+		return subject;
 	}
 
-	// Setter Methods
-
-	public void setSubject(Subject subjectObject) {
-		this.SubjectObject = subjectObject;
+	public void setSubject(Subject subject) {
+		this.subject = subject;
 	}
 
-	public class Subject {
-		private String display_name;
-		private String name;
-		ArrayList<Object> values = new ArrayList<Object>();
+	public ArrayList<Polarity> getPolarities() {
+		return polarities;
+	}
 
-		// Getter Methods
-
-		public String getDisplay_name() {
-			return display_name;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		// Setter Methods
-
-		public void setDisplay_name(String display_name) {
-			this.display_name = display_name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
+	public void setPolarities(ArrayList<Polarity> polarities) {
+		this.polarities = polarities;
 	}
 }
