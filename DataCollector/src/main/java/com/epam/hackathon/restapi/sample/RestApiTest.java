@@ -22,7 +22,7 @@ public class RestApiTest {
 
 	@PostConstruct
 	public void testRest() {
-		Object data = restCallUtil.testRestCall();
+		String data = restCallUtil.callGetMethodTest();
 		System.out.println(data);
 	}
 }
